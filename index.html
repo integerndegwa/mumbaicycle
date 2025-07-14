@@ -23,10 +23,12 @@
         }
         /* Background image with overlay for hero section */
         .hero-section {
-            background-image: url('https://placehold.co/1920x1080/1a202c/ffffff?text=Mumbai+Cycle'); /* Placeholder image */
+            /* Updated background image to a generic placeholder */
+            background-image: url('heromumbai.jpg'); /* Generic Placeholder */
             background-size: cover;
             background-position: center;
             position: relative;
+            overflow: hidden; /* Hide overflow for background animation */
         }
         .hero-section::before {
             content: '';
@@ -36,11 +38,24 @@
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.6); /* Dark overlay */
+            z-index: 1; /* Ensure overlay is above background image */
         }
         .hero-content {
             position: relative;
             z-index: 10;
         }
+
+        /* Keyframes for subtle background movement */
+        @keyframes pan-background {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero-section {
+            animation: pan-background 30s infinite alternate linear; /* Apply animation */
+        }
+
         /* Card hover effect */
         .card-hover-effect {
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -57,6 +72,19 @@
             background-color: #1a5632; /* Darker green */
             transform: translateY(-2px);
         }
+
+        /* Page transition effect for new sections */
+        .page-section {
+            display: none; /* Hidden by default */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .page-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -65,7 +93,7 @@
     <header class="bg-white shadow-lg fixed w-full z-50 py-4 px-6 md:px-12">
         <div class="container mx-auto flex justify-between items-center">
             <!-- Logo Placeholder -->
-            <a href="#" class="flex items-center">
+            <a href="#" class="flex items-center" onclick="showSection('hero-section-wrapper')">
                 <img src="logomumbai.png" alt="Mumbai Cycle Logo" class="h-10 w-auto rounded-md">
             </a>
             <!-- Hamburger Menu Button -->
@@ -76,10 +104,12 @@
             </button>
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex space-x-8">
-                <a href="#about" class="text-gray-700 hover:text-green-700 font-medium transition-colors duration-300">About</a>
-                <a href="#mission" class="text-gray-700 hover:text-green-700 font-medium transition-colors duration-300">Mission</a>
-                <a href="#founders" class="text-gray-700 hover:text-green-700 font-medium transition-colors duration-300">Founders</a>
-                <a href="#stores" class="text-gray-700 hover:text-green-700 font-medium transition-colors duration-300">Stores</a>
+                <a href="#" onclick="showSection('about')" class="text-gray-700 hover:text-green-700 font-medium transition-colors duration-300">About</a>
+                <a href="#" onclick="showSection('mission')" class="text-gray-700 hover:text-green-700 font-medium transition-colors duration-300">Mission</a>
+                <a href="#" onclick="showSection('founders')" class="text-gray-700 hover:text-green-700 font-medium transition-colors duration-300">Founders</a>
+                <a href="#" onclick="showSection('stores')" class="text-gray-700 hover:text-green-700 font-medium transition-colors duration-300">Stores</a>
+                <a href="#" onclick="showSection('account')" class="text-gray-700 hover:text-green-700 font-medium transition-colors duration-300">Account</a>
+                <a href="#" onclick="showSection('checkout')" class="text-gray-700 hover:text-green-700 font-medium transition-colors duration-300">Checkout</a>
             </nav>
         </div>
     </header>
@@ -87,157 +117,265 @@
     <!-- Mobile Sidebar Menu -->
     <div id="sidebar" class="sidebar fixed top-0 right-0 w-64 h-full bg-white shadow-xl z-50 transform translate-x-full md:hidden pt-20">
         <nav class="flex flex-col p-6 space-y-4">
-            <a href="#about" class="text-gray-800 hover:text-green-700 font-medium text-lg transition-colors duration-300" onclick="toggleSidebar()">About</a>
-            <a href="#mission" class="text-gray-800 hover:text-green-700 font-medium text-lg transition-colors duration-300" onclick="toggleSidebar()">Mission</a>
-            <a href="#founders" class="text-gray-800 hover:text-green-700 font-medium text-lg transition-colors duration-300" onclick="toggleSidebar()">Founders</a>
-            <a href="#stores" class="text-gray-800 hover:text-green-700 font-medium text-lg transition-colors duration-300" onclick="toggleSidebar()">Stores</a>
+            <a href="#" onclick="showSection('about'); toggleSidebar();" class="text-gray-800 hover:text-green-700 font-medium text-lg transition-colors duration-300">About</a>
+            <a href="#" onclick="showSection('mission'); toggleSidebar();" class="text-gray-800 hover:text-green-700 font-medium text-lg transition-colors duration-300">Mission</a>
+            <a href="#" onclick="showSection('founders'); toggleSidebar();" class="text-gray-800 hover:text-green-700 font-medium text-lg transition-colors duration-300">Founders</a>
+            <a href="#" onclick="showSection('stores'); toggleSidebar();" class="text-gray-800 hover:text-green-700 font-medium text-lg transition-colors duration-300">Stores</a>
+            <a href="#" onclick="showSection('account'); toggleSidebar();" class="text-gray-800 hover:text-green-700 font-medium text-lg transition-colors duration-300">Account</a>
+            <a href="#" onclick="showSection('checkout'); toggleSidebar();" class="text-gray-800 hover:text-green-700 font-medium text-lg transition-colors duration-300">Checkout</a>
         </nav>
     </div>
 
-    <!-- Hero Section -->
-    <section class="hero-section h-screen flex items-center justify-center text-center text-white pt-16">
-        <div class="hero-content p-8 max-w-4xl mx-auto animate-fade-in">
-            <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-6 tracking-wide">
-                Experience the Joy of Cycling with <span class="text-green-400">Mumbai Cycle</span>
-            </h1>
-            <p class="text-xl md:text-2xl mb-8 opacity-90">
-                Your premier destination for premium cycling experiences and a vibrant community.
-            </p>
-            <a href="#about" class="inline-block bg-green-600 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-green-700 btn-hover-effect">
-                Discover More
-            </a>
-        </div>
-    </section>
+    <!-- Main Content Wrapper for sections that are toggled -->
+    <div id="main-content-wrapper" class="pt-16">
+        <!-- Hero Section Wrapper to allow toggling, initially active -->
+        <section id="hero-section-wrapper" class="page-section active hero-section h-screen flex items-center justify-center text-center text-white">
+            <div class="hero-content p-8 max-w-4xl mx-auto animate-fade-in">
+                <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-6 tracking-wide">
+                    Experience the Joy of Cycling with <span class="text-green-400">Mumbai Cycle</span>
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 opacity-90">
+                    Your premier destination for premium cycling experiences and a vibrant community.
+                </p>
+                <a href="#" onclick="showSection('about')" class="inline-block bg-green-600 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-green-700 btn-hover-effect">
+                    Discover More
+                </a>
+            </div>
+        </section>
 
-    <!-- About Mumbai Cycle Section -->
-    <section id="about" class="py-16 md:py-24 bg-white">
-        <div class="container mx-auto px-6 max-w-4xl">
-            <h2 class="text-4xl font-bold text-center text-gray-900 mb-12 animate-slide-up">About Mumbai Cycle</h2>
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="text-lg leading-relaxed text-gray-700 space-y-6 animate-fade-in-left">
-                    <p>
-                        Mumbai Cycle was founded in 2025 with the goal of delivering premium cycling experiences to local communities. We offer an impressive lineup of over <strong>30 top global and Indian bicycle brands</strong>, including Trek, Merida, Scott, Bergamont, Giant, Argon 18, BMC, Java, Specialized, Schnell, Keysto, Caya, Firefox, and more.
-                    </p>
-                    <p>
-                        Our focus is not on flashy interiors but on investing in <strong>people</strong>—certified bicycle technicians and experienced sales professionals who are passionate about cycling and customer service. We take pride in offering the <strong>best in-class service</strong> for bicycles, ensuring every rider leaves with the right product and guidance.
-                    </p>
-                    <p>
-                        We currently operate stores in Vasai, Virar, Palghar, and Boisar in Maharashtra and Valsad in Gujarat.
-                    </p>
-                </div>
-                <div class="flex justify-center animate-fade-in-right">
-                    <img src="https://placehold.co/500x350/e2e8f0/334155?text=Bicycle+Showroom" alt="Bicycle Showroom" class="rounded-xl shadow-2xl w-full max-w-md object-cover transform transition-transform duration-500 hover:scale-105">
+        <!-- About Mumbai Cycle Section -->
+        <section id="about" class="page-section py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <h2 class="text-4xl font-bold text-center text-gray-900 mb-12 animate-slide-up">About Mumbai Cycle</h2>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="text-lg leading-relaxed text-gray-700 space-y-6 animate-fade-in-left">
+                        <p>
+                            Mumbai Cycle was founded in 2025 with the goal of delivering premium cycling experiences to local communities. We offer an impressive lineup of over <strong>30 top global and Indian bicycle brands</strong>, including Trek, Merida, Scott, Bergamont, Giant, Argon 18, BMC, Java, Specialized, Schnell, Keysto, Caya, Firefox, and more.
+                        </p>
+                        <p>
+                            Our focus is not on flashy interiors but on investing in <strong>people</strong>—certified bicycle technicians and experienced sales professionals who are passionate about cycling and customer service. We take pride in offering the <strong>best in-class service</strong> for bicycles, ensuring every rider leaves with the right product and guidance.
+                        </p>
+                        <p>
+                            We currently operate stores in Vasai, Virar, Palghar, and Boisar in Maharashtra and Valsad in Gujarat.
+                        </p>
+                    </div>
+                    <div class="flex justify-center animate-fade-in-right">
+                        <img src="https://placehold.co/500x350/e2e8f0/334155?text=Bicycle+Showroom" alt="Bicycle Showroom" class="rounded-xl shadow-2xl w-full max-w-md object-cover transform transition-transform duration-500 hover:scale-105">
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Our Mission Section -->
-    <section id="mission" class="py-16 md:py-24 bg-gray-100">
-        <div class="container mx-auto px-6 max-w-4xl">
-            <h2 class="text-4xl font-bold text-center text-gray-900 mb-12 animate-slide-up">Our Mission</h2>
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="flex justify-center animate-fade-in-left">
-                    <img src="https://placehold.co/500x350/d1fae5/065f46?text=Cycling+Community" alt="Cycling Community" class="rounded-xl shadow-2xl w-full max-w-md object-cover transform transition-transform duration-500 hover:scale-105">
-                </div>
-                <div class="text-lg leading-relaxed text-gray-700 space-y-6 animate-fade-in-right">
-                    <p>
-                        To transform daily commuting and fitness through cycling—replacing motorcycles and cars with sustainable two-wheelers, and promoting health across all age groups.
-                    </p>
-                    <p>
-                        Mumbai Cycle strives to make cycling a lifestyle. Through expert service, community engagement, and accessible pricing, we empower more people to take up cycling—be it for commuting, fitness, or adventure.
-                    </p>
-                    <p>
-                        Our in-house cycling community, the <strong>Mumbai Cycle Pro Club</strong>, regularly hosts rides, events, and challenges to keep the cycling spirit alive.
-                    </p>
+        <!-- Our Mission Section -->
+        <section id="mission" class="page-section py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <h2 class="text-4xl font-bold text-center text-gray-900 mb-12 animate-slide-up">Our Mission</h2>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="flex justify-center animate-fade-in-left">
+                        <img src="https://placehold.co/500x350/d1fae5/065f46?text=Cycling+Community" alt="Cycling Community" class="rounded-xl shadow-2xl w-full max-w-md object-cover transform transition-transform duration-500 hover:scale-105">
+                    </div>
+                    <div class="text-lg leading-relaxed text-gray-700 space-y-6 animate-fade-in-right">
+                        <p>
+                            To transform daily commuting and fitness through cycling—replacing motorcycles and cars with sustainable two-wheelers, and promoting health across all age groups.
+                        </p>
+                        <p>
+                            Mumbai Cycle strives to make cycling a lifestyle. Through expert service, community engagement, and accessible pricing, we empower more people to take up cycling—be it for commuting, fitness, or adventure.
+                        </p>
+                        <p>
+                            Our in-house cycling community, the <strong>Mumbai Cycle Pro Club</strong>, regularly hosts rides, events, and challenges to keep the cycling spirit alive.
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Founders Section -->
-    <section id="founders" class="py-16 md:py-24 bg-white">
-        <div class="container mx-auto px-6 max-w-5xl">
-            <h2 class="text-4xl font-bold text-center text-gray-900 mb-12 animate-slide-up">Our Founders</h2>
-            <div class="grid md:grid-cols-2 gap-12 md:gap-16">
-                <!-- Preeti Maske -->
-                <div class="flex flex-col items-center text-center card-hover-effect bg-white p-8 rounded-xl shadow-lg animate-fade-in-up">
-                    <img src="https://placehold.co/150x150/a78bfa/ffffff?text=Preeti+M" alt="Preeti Maske" class="w-40 h-40 rounded-full object-cover mb-6 border-4 border-green-500 shadow-md">
-                    <h3 class="text-3xl font-semibold text-gray-900 mb-3">Preeti Maske</h3>
-                    <p class="text-lg text-gray-600 mb-4">Co-Founder, Endurance Athlete</p>
-                    <p class="text-md leading-relaxed text-gray-700">
-                        A record-breaking endurance athlete, Preeti is a <strong>5-time Guinness World Record holder</strong>, Ironman finisher, cyclist, and runner. She is representing India in the NorthCape 4000 ultra-endurance event in August 2025. Her accomplishments reflect the resilience and passion that drive Mumbai Cycle.
-                    </p>
+        <!-- Founders Section -->
+        <section id="founders" class="page-section py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6 max-w-5xl">
+                <h2 class="text-4xl font-bold text-center text-gray-900 mb-12 animate-slide-up">Our Founders</h2>
+                <div class="grid md:grid-cols-2 gap-12 md:gap-16">
+                    <!-- Preeti Maske -->
+                    <div class="flex flex-col items-center text-center card-hover-effect bg-white p-8 rounded-xl shadow-lg animate-fade-in-up">
+                        <img src="https://placehold.co/150x150/a78bfa/ffffff?text=Preeti+M" alt="Preeti Maske" class="w-40 h-40 rounded-full object-cover mb-6 border-4 border-green-500 shadow-md">
+                        <h3 class="text-3xl font-semibold text-gray-900 mb-3">Preeti Maske</h3>
+                        <p class="text-lg text-gray-600 mb-4">Co-Founder, Endurance Athlete</p>
+                        <p class="text-md leading-relaxed text-gray-700">
+                            A record-breaking endurance athlete, Preeti is a <strong>5-time Guinness World Record holder</strong>, Ironman finisher, cyclist, and runner. She is representing India in the NorthCape 4000 ultra-endurance event in August 2025. Her accomplishments reflect the resilience and passion that drive Mumbai Cycle.
+                        </p>
+                    </div>
+                    <!-- Jake Thomas -->
+                    <div class="flex flex-col items-center text-center card-hover-effect bg-white p-8 rounded-xl shadow-lg animate-fade-in-up delay-200">
+                        <img src="https://placehold.co/150x150/60a5fa/ffffff?text=Jake+T" alt="Jake Thomas" class="w-40 h-40 rounded-full object-cover mb-6 border-4 border-green-500 shadow-md">
+                        <h3 class="text-3xl font-semibold text-gray-900 mb-3">Jake Thomas</h3>
+                        <p class="text-lg text-gray-600 mb-4">Co-Founder, Industry Veteran</p>
+                        <p class="text-md leading-relaxed text-gray-700">
+                            With over <strong>10 years in the bicycle industry</strong> and having personally sold over <strong>25,000 bicycles</strong>, Jake brings unmatched industry insight, operational strength, and a deep understanding of cyclists' needs. He is also a passionate rider and community builder.
+                        </p>
+                    </div>
                 </div>
-                <!-- Jake Thomas -->
-                <div class="flex flex-col items-center text-center card-hover-effect bg-white p-8 rounded-xl shadow-lg animate-fade-in-up delay-200">
-                    <img src="https://placehold.co/150x150/60a5fa/ffffff?text=Jake+T" alt="Jake Thomas" class="w-40 h-40 rounded-full object-cover mb-6 border-4 border-green-500 shadow-md">
-                    <h3 class="text-3xl font-semibold text-gray-900 mb-3">Jake Thomas</h3>
-                    <p class="text-lg text-gray-600 mb-4">Co-Founder, Industry Veteran</p>
-                    <p class="text-md leading-relaxed text-gray-700">
-                        With over <strong>10 years in the bicycle industry</strong> and having personally sold over <strong>25,000 bicycles</strong>, Jake brings unmatched industry insight, operational strength, and a deep understanding of cyclists' needs. He is also a passionate rider and community builder.
-                    </p>
+                <p class="text-center text-xl text-gray-700 mt-12">
+                    Together, Preeti and Jake form the heart of Mumbai Cycle—driven by vision, fueled by passion.
+                </p>
+            </div>
+        </section>
+
+        <!-- Store Locations Section -->
+        <section id="stores" class="page-section py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6 max-w-5xl">
+                <h2 class="text-4xl font-bold text-center text-gray-900 mb-12 animate-slide-up">Our Store Locations</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Vasai Store -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg card-hover-effect animate-fade-in-up">
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                            Mumbai Cycle – Vasai
+                        </h3>
+                        <p class="text-gray-700 mb-2">5, 6, 7 Dosti Diamond, Stella, Opp. Kerala Café, Vasai West, Palghar, Maharashtra 401202</p>
+                        <p class="text-gray-700 font-semibold">Phone: <a href="tel:09309590782" class="text-green-600 hover:underline">093095 90782</a></p>
+                    </div>
+                    <!-- Virar Store -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg card-hover-effect animate-fade-in-up delay-100">
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                            Mumbai Cycle – Virar
+                        </h3>
+                        <p class="text-gray-700 mb-2">Shop No. 12, Reserve Groove, Ashoka Shopping Centre, Kamanwala Nagar, Society Jakat Naka, Gokul Township, Agashi Road, Virar West, Maharashtra 401303</p>
+                        <p class="text-gray-700 font-semibold">Phone: <a href="tel:8855028814" class="text-green-600 hover:underline">8855028814</a></p>
+                    </div>
+                    <!-- Palghar Store -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg card-hover-effect animate-fade-in-up delay-200">
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                            Mumbai Cycle – Palghar
+                        </h3>
+                        <p class="text-gray-700 mb-2">Shop No. 1 & 2, Punit Nagar, Near Reliance Mall, Tembode Road, Palghar, Maharashtra 401404</p>
+                        <p class="text-700 font-semibold">Phone: <a href="tel:7276061765" class="text-green-600 hover:underline">7276061765</a></p>
+                    </div>
+                    <!-- Boisar Store -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg card-hover-effect animate-fade-in-up delay-300">
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                            Mumbai Cycle – Boisar
+                        </h3>
+                        <p class="text-gray-700 mb-2">Shop No. 48, Harmony Plaza, Near Domino’s Pizza, Boisar West, Palghar, Maharashtra 401501</p>
+                        <p class="text-gray-700 font-semibold">Phone: <a href="tel:8421887813" class="text-green-600 hover:underline">8421887813</a></p>
+                    </div>
+                    <!-- Valsad Store -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg card-hover-effect animate-fade-in-up delay-400">
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                            Mumbai Cycle – Valsad
+                        </h3>
+                        <p class="text-gray-700 mb-2">Shop No. 4, Aakar Apartment, Near Happinezz Ice Cream, Tithal Road, Valsad, Gujarat 396001</p>
+                        <p class="text-gray-700 font-semibold">Phone: <a href="tel:0" class="text-green-600 hover:underline">Not provided</a></p>
+                    </div>
                 </div>
             </div>
-            <p class="text-center text-xl text-gray-700 mt-12">
-                Together, Preeti and Jake form the heart of Mumbai Cycle—driven by vision, fueled by passion.
-            </p>
-        </div>
-    </section>
+        </section>
 
-    <!-- Store Locations Section -->
-    <section id="stores" class="py-16 md:py-24 bg-gray-100">
-        <div class="container mx-auto px-6 max-w-5xl">
-            <h2 class="text-4xl font-bold text-center text-gray-900 mb-12 animate-slide-up">Our Store Locations</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Vasai Store -->
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover-effect animate-fade-in-up">
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
-                        Mumbai Cycle – Vasai
-                    </h3>
-                    <p class="text-gray-700 mb-2">5, 6, 7 Dosti Diamond, Stella, Opp. Kerala Café, Vasai West, Palghar, Maharashtra 401202</p>
-                    <p class="text-gray-700 font-semibold">Phone: <a href="tel:09309590782" class="text-green-600 hover:underline">093095 90782</a></p>
+        <!-- Account Section -->
+        <section id="account" class="page-section py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6 max-w-md">
+                <h2 class="text-4xl font-bold text-center text-gray-900 mb-12">Account</h2>
+
+                <!-- Login Form -->
+                <div class="bg-gray-100 p-8 rounded-xl shadow-lg mb-8">
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Login</h3>
+                    <form class="space-y-6">
+                        <div>
+                            <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <input type="email" id="login-email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div>
+                            <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <input type="password" id="login-password" name="password" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <button type="submit" class="w-full bg-green-600 text-white px-6 py-3 rounded-md text-lg font-semibold shadow-md hover:bg-green-700 btn-hover-effect">
+                            Login
+                        </button>
+                    </form>
                 </div>
-                <!-- Virar Store -->
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover-effect animate-fade-in-up delay-100">
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
-                        Mumbai Cycle – Virar
-                    </h3>
-                    <p class="text-gray-700 mb-2">Shop No. 12, Reserve Groove, Ashoka Shopping Centre, Kamanwala Nagar, Society Jakat Naka, Gokul Township, Agashi Road, Virar West, Maharashtra 401303</p>
-                    <p class="text-gray-700 font-semibold">Phone: <a href="tel:8855028814" class="text-green-600 hover:underline">8855028814</a></p>
-                </div>
-                <!-- Palghar Store -->
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover-effect animate-fade-in-up delay-200">
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
-                        Mumbai Cycle – Palghar
-                    </h3>
-                    <p class="text-gray-700 mb-2">Shop No. 1 & 2, Punit Nagar, Near Reliance Mall, Tembode Road, Palghar, Maharashtra 401404</p>
-                    <p class="text-gray-700 font-semibold">Phone: <a href="tel:7276061765" class="text-green-600 hover:underline">7276061765</a></p>
-                </div>
-                <!-- Boisar Store -->
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover-effect animate-fade-in-up delay-300">
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
-                        Mumbai Cycle – Boisar
-                    </h3>
-                    <p class="text-gray-700 mb-2">Shop No. 48, Harmony Plaza, Near Domino’s Pizza, Boisar West, Palghar, Maharashtra 401501</p>
-                    <p class="text-gray-700 font-semibold">Phone: <a href="tel:8421887813" class="text-green-600 hover:underline">8421887813</a></p>
-                </div>
-                <!-- Valsad Store -->
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover-effect animate-fade-in-up delay-400">
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
-                        Mumbai Cycle – Valsad
-                    </h3>
-                    <p class="text-gray-700 mb-2">Shop No. 4, Aakar Apartment, Near Happinezz Ice Cream, Tithal Road, Valsad, Gujarat 396001</p>
-                    <p class="text-gray-700 font-semibold">Phone: <a href="tel:0" class="text-green-600 hover:underline">Not provided</a></p>
+
+                <!-- Sign Up Form -->
+                <div class="bg-gray-100 p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Sign Up</h3>
+                    <form class="space-y-6">
+                        <div>
+                            <label for="signup-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <input type="text" id="signup-name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div>
+                            <label for="signup-email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <input type="email" id="signup-email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div>
+                            <label for="signup-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <input type="password" id="signup-password" name="password" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div>
+                            <label for="signup-confirm-password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                            <input type="password" id="signup-confirm-password" name="confirm-password" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <button type="submit" class="w-full bg-green-600 text-white px-6 py-3 rounded-md text-lg font-semibold shadow-md hover:bg-green-700 btn-hover-effect">
+                            Sign Up
+                        </button>
+                    </form>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Checkout Section -->
+        <section id="checkout" class="page-section py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6 max-w-md">
+                <h2 class="text-4xl font-bold text-center text-gray-900 mb-12">Checkout</h2>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Shipping & Payment</h3>
+                    <form class="space-y-6">
+                        <!-- Shipping Address -->
+                        <div>
+                            <label for="full-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <input type="text" id="full-name" name="full-name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div>
+                            <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                            <input type="text" id="address" name="address" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                                <input type="text" id="city" name="city" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                            </div>
+                            <div>
+                                <label for="zip" class="block text-sm font-medium text-gray-700 mb-1">Zip Code</label>
+                                <input type="text" id="zip" name="zip" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="country" class="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                            <input type="text" id="country" name="country" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+
+                        <!-- Payment Method Placeholder -->
+                        <div>
+                            <label for="payment-method" class="block text-sm font-medium text-gray-700 mb-1">Payment Method</label>
+                            <select id="payment-method" name="payment-method" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                                <option value="">Select a method</option>
+                                <option value="credit-card">Credit Card</option>
+                                <option value="upi">UPI</option>
+                                <option value="net-banking">Net Banking</option>
+                            </select>
+                        </div>
+                        <p class="text-sm text-gray-600 text-center">Payment gateway integration would be handled on the backend.</p>
+
+                        <button type="submit" class="w-full bg-green-600 text-white px-6 py-3 rounded-md text-lg font-semibold shadow-md hover:bg-green-700 btn-hover-effect">
+                            Place Order
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div> <!-- End of main-content-wrapper -->
 
     <!-- Footer -->
     <footer class="bg-gray-800 text-white py-10">
@@ -269,11 +407,27 @@
             }
         });
 
-        // Add Tailwind CSS animation classes dynamically for cutting-edge transitions
-        // These are defined in the head style block for simplicity, but can be added here too.
-        // For example, you could observe elements entering viewport and add classes.
-        // For this example, simple fade-in and slide-up animations are used.
-        // You can extend these with libraries like AOS (Animate On Scroll) for more complex effects.
+        // JavaScript for Section Toggling and Transitions
+        const sections = document.querySelectorAll('.page-section');
+
+        function showSection(id) {
+            sections.forEach(section => {
+                if (section.id === id) {
+                    section.classList.add('active');
+                    // Scroll to the top of the newly active section
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+            // Ensure the body's overflow-x is hidden to prevent horizontal scroll issues
+            document.body.style.overflowX = 'hidden';
+        }
+
+        // Initialize: Show the hero section on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('hero-section-wrapper');
+        });
     </script>
 </body>
 </html>
